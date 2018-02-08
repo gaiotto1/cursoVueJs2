@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Curso Vue js 2</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+
+    <style media="screen">
+      .active{
+        background: green;
+      }
+      .no-active{
+        background: red
+      }
+
+      .default{
+        background: yellow
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+        <b>- Data binding</b>
+        {{title}}
+        {{isActive ? 'ativo' : 'não ativo'}}
+        <p :title="tituloP">Titulo Teste</p>
+        <br/>
+
+        <b>- Two way Data binding = atualiza todas as variaveis na view</b>
+        <p>Nome1: {{name}}</p>
+        <p>Nome2: {{name}}</p>
+        <input type="text" v-model:value="name">
+        <br/>
+
+        <p><b>- V-once</b></p>
+        <p v-once>{{name}}</p>
+        <br/>
+
+        <b>- V-Html</b><!--essa diretiva deixa aberto a possíveis ataques xss-->
+        <div v-html="descricao">
+            {{descricao}}
+        </div>
+        <br/>
+
+        <b>Eventos</b>
+        <input type="button" name="" value="+" @click="count++">
+        <p>{{count}}</p>
+        <br/>
+
+        <p><b>Eventos com parametro</b></p>
+        <input type="text" name="" value="" @keyup="changeInput">
+        <input type="button" @click="changeInputTwo(2)" name="" value="add 2">
+        <input type="text" @keyup="changeInputThree(2, $event)" name="" placeholder="value atual + 2">
+        <p>Result: {{count}}</p>
+        <br/>
+        
+        <p><b>eventos de teclado</b></p>
+        <input type="text" name="" value="" @keyup.enter.tab ="escreveTexto">
+        <p>{{result}}</p>
+        <br/>
+
+        <p><b>Eventos teclas modificadoras do sistema</b></p>
+        <form class="" method="post" @submit.prevent="showConsole()">
+            <input type="text" name="" value="">
+            <input type="submit" name="" value="enviar">
+        </form>
+        <br/>
+
+        <p> <b>Propriedades computadas e métodos</b> </p>
+        <input type="buttom" name="" value="+" @click="contador++" placeholder="computhed">
+        <input type="buttom" name="" value="-" @click="contador--" placeholder="method">
+        <p>{{contador}} | {{countComputed}} | {{ countMethod() }}</p>
+        <br/>
+
+        <p><b>Watchers - Observadores</b></p>
+        <input type="button" name="" value="click" @click="countEscutado++">
+        {{countEscutado}}
+
+        <p> <b>Exemplo de Style Vue</b> </p>
+        <div :class="{active : isActive}"><!--if isActive == true-->
+            exemplo 1
+        </div>
+        <input type="button" name="" value="troca cor" @click="isActive = !isActive">
+
+        <div class="" :class="isActive ? 'active' : 'no-active'"> <!--se isActive == true atribui a classe "active" ou atribui a classe "no-active" -->
+          exemplo 2
+        </div>
+
+        <div :class="['default', isActive ? 'active' : 'no-active']">
+          exemplo 3
+        </div>
+    </div>
+
+  <script>
+      new Vue({
+          el:"#app",
+          data:{
+              title:"titulo",
+              isActive: false,
+              tituloP: "title do elemento",
+              name: "nome",
+              descricao:"<h2>descricao do v-html</h2>",
+              count:0,
+              result:"",
+              urlLink:"#",
+              contador:0,
+              countEscutado:0,
+              isActive:true
+          },
+          watch: {
+            countEscutado: function (value){
+                console.log(value)
+            }
+          },
+          computed:{
+            countComputed (){
+              console.log('count computhed');
+              return this.contador >= 5 ? "maior que cinco" : "menor que cinco"
+            }
+          },
+          methods:{
+            changeInput: function (event){
+                console.log(event)
+                console.log(event.target.value)
+            },
+            changeInputTwo: function (value){
+                this.count += value
+                console.log("chamou o metodo changeInputTwo")
+            },
+            changeInputThree (value, event){
+                //pega o parametro 2 e soma com o value digitado no input depois incrementa com o count
+                value += parseInt(event.target.value)
+                this.count += value
+            },
+            escreveTexto (event){
+                this.result = event.target.value;
+            },
+            showConsole (event){
+                //event.preventDefault()
+                console.log("clicou link")
+            },
+            countMethod: function (){
+              console.log('count method');
+              return this.contador >= 5 ? "maior que cinco" : "menor que cinco"
+            }
+          }
+      })
+
+    /*
+      var arr = [
+          {type:"aa"},
+          {type:"bb"},
+          {type:"aa"},
+          {type:"bb"},
+          {type:"cc"}
+      ]
+      var result = arr.map(data => data.type).filter((item, index, arr) => arr.indexOf(item) === index);
+      console.log(result);
+    */
+  </script>
+</body>
+</html>
